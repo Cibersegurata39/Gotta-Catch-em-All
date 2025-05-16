@@ -5,6 +5,7 @@ Máquina resuelta de *TryHackMe* en la que se trabaja la enumeración y *fingerp
   <img src="https://img.shields.io/badge/-Kali-5e8ca8?style=for-the-badge&logo=kalilinux&logoColor=white" />
   <img src="https://img.shields.io/badge/-Nmap-6933FF?style=for-the-badge&logo=nmap&logoColor=white" />
   <img src="https://img.shields.io/badge/-Dirsearch-005571?style=for-the-badge&logo=dirsearch&logoColor=white" />
+  gobuster
   <img src="https://img.shields.io/badge/-php-777BB4?style=for-the-badge&logo=php&logoColor=white" />
   <img src="https://img.shields.io/badge/-Bash-4EAA25?style=for-the-badge&logo=gnubash&logoColor=white" />
   <img src="https://img.shields.io/badge/-python-3776AB?style=for-the-badge&logo=python&logoColor=white" />
@@ -27,7 +28,7 @@ Explicar la realización del siguiente _Capture the flag_ perteneciente a la pla
 ## Herramientas utilizadas
 
 - *Kali Linux*.
-- Enumeración: *Nmap*, *Dirsearch*.
+- Enumeración: *Nmap*, *Dirsearch*, *Gobuster*.
 - Penetración: *SSH*, *Bash*, *Python3*, *Unzip*. 
 
 ## Steps
@@ -49,4 +50,31 @@ En el puerto 80 corre el servidor Apache 2.4.18, en un sistema Ubuntu, servicio 
 
 No ha sido capaz de detectar el sistema operativo y los *scripts* no han devuelto ninguna vulnerabilidad.
 
-Así pues, primero nos dirigimos, desde el navegador, al puerto 80 de la IP dada,
+Así pues, primero nos dirigimos desde el navegador al puerto 80 de la IP dada y esta nos lleva a la página por defecto del servidor de *Apache*. Al analizar el código fuente de la página, se encuentra un comentario donde se incita a interactuar con la consola para obtener información. En otra parte del código se encuentra una lista de *pokemons*, la cual aparece en la consola a través de la variable 'original'.
+
+![Captura de pantalla 2025-05-15 172413](https://github.com/user-attachments/assets/cfe2840a-818a-4b94-b058-eb2a56c9b651)
+
+Lo siguiente es hacer una enumeración web con **Dirsearch** para encontrar posibles directorios y archivos.  Por la parte de directorios, únicamente aparece '/server-status' el cual no es alcanzable. *Dirsearch* es lanzado con **Python3** indicando la IP a atacar (-u) y la lista a utilizar para la enumeración (-w); en este caso la 'raft-small-directories.txt'.
+
+![Captura de pantalla 2025-05-15 175230](https://github.com/user-attachments/assets/02e63ef5-95ec-4349-9d69-63bd7fbb1097)
+
+Por medio de la herramienta **gobuster** han aparecido más directorios, los cuales tampoco se pueden alcanzar. Esta búsqueda se ha especificado en el parámetro 'dir', añadiendo la IP destinto con '-u' y el diccionario 'common.txt' con '-w'.
+
+![Captura de pantalla 2025-05-15 175353](https://github.com/user-attachments/assets/9921205d-45a2-42db-9673-1c6d134568ec)
+
+### Vulnerabilidades explotadas
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
