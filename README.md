@@ -5,7 +5,8 @@ Máquina resuelta de *TryHackMe* en la que se trabaja la enumeración y *fingerp
   <img src="https://img.shields.io/badge/-Kali-5e8ca8?style=for-the-badge&logo=kalilinux&logoColor=white" />
   <img src="https://img.shields.io/badge/-Nmap-6933FF?style=for-the-badge&logo=nmap&logoColor=white" />
   <img src="https://img.shields.io/badge/-Dirsearch-005571?style=for-the-badge&logo=dirsearch&logoColor=white" />
-  gobuster
+  <img src="https://img.shields.io/badge/-Gobuster-3CBDB1?style=for-the-badge&logo=gobuster&logoColor=white" />
+  ssh
   <img src="https://img.shields.io/badge/-php-777BB4?style=for-the-badge&logo=php&logoColor=white" />
   <img src="https://img.shields.io/badge/-Bash-4EAA25?style=for-the-badge&logo=gnubash&logoColor=white" />
   <img src="https://img.shields.io/badge/-python-3776AB?style=for-the-badge&logo=python&logoColor=white" />
@@ -60,21 +61,48 @@ Lo siguiente es hacer una enumeración web con **Dirsearch** para encontrar posi
 
 Por medio de la herramienta **gobuster** han aparecido más directorios, los cuales tampoco se pueden alcanzar. Esta búsqueda se ha especificado en el parámetro 'dir', añadiendo la IP destinto con '-u' y el diccionario 'common.txt' con '-w'.
 
+<code>gobuster dir -u 10.10.226.58 -w /usr/share/wordlists/dirb/common.txt</code>
+
 ![Captura de pantalla 2025-05-15 175353](https://github.com/user-attachments/assets/9921205d-45a2-42db-9673-1c6d134568ec)
 
 ### Vulnerabilidades explotadas
 
+Volviendo al código de la web, donde estaba el comentario que sugería revisar la consola, se puede observar dos etiquetas dispuestas de tal manera que parecen ser un usuario y contraseña (pokemon:hack_the_pokemon). Por lo que se probará la conexión *SSH* con estas credenciales con resultado positivo. Una vez dentro, se comprueba el usuario alcanzado (pokemon) y los grupos a los que pertenece.
 
+<code>ssh pokemon@10.10.226.58</code>
 
+![Captura de pantalla 2025-05-15 175648](https://github.com/user-attachments/assets/a6f58264-4d21-4db7-b96e-59fdd71ab669)
 
+Se inspecciona el directorio '/var/www/html', el cual se suele alcanzar al penetrar los servidores *Apache*, y encontramos al primero de los *pokemon* aunque codificado en *ROT* (codificación por rotación, es decir, cifrado por desplazamiento de cada uno de los caracteres N posiciones).
+<code>cd /var/www/html</code>
 
+<code>cat water-type.txt</code>
 
+![Captura de pantalla 2025-05-15 180244](https://github.com/user-attachments/assets/a7e20069-00fa-4e05-9cd2-65805a4b295e)
 
+Gracias a un [rot_cypher](https://www.dcode.fr/rot-cipher), se encuentra la *flag* descrifrada que había sido rotada 14 posiciones.
 
+**Flag: Squirtle_SqUaD{Squirtle}**
 
+Analizando el directorio '/home' se averigua que además del usuario *pokemon*, también existe *ash* (esto se puede comprobar accediendo a '/etc/passwd') y un documento '.txt', cuyo contenido no se puede leer. Al entrar en '/pokemon/Desktop', se encuentra el archivo 'P0kEmOn.zip', el cual es descargado montando un servidor con **Python3** en el puerto 8080.
 
+<code>python3 -m http.server 8080</code>
 
+![Captura de pantalla 2025-05-15 181229](https://github.com/user-attachments/assets/631e7a4c-f584-44fe-b503-b93e696c5c67)
 
+Desde la máquina atacante se lanza el comando <code>wget</code> indicando la IP y puerto del servidor creados y el arhcivo a descargar. Una vez en posesión del *zip*, se descomprime con <code>unzip</code> y aparece el archivo 'P0kEmOn/grass-type.txt' con un nuevo *pokemon*.
+
+<code>wget 10.10.226.58:8080/P0kEmOn.zip</code>
+
+<code>unzip P0kEmOn.zip</code>
+
+<code>cat P0kEmOn/grass-type.txt</code>
+
+Esta nueva *flag* está en código hexadecimal (50 6f 4b 65 4d 6f 4e 7b 42 75 6c 62 61 73 61 75 72 7d), el cual se descifra con [CyberChef](https://gchq.github.io/CyberChef/). 
+
+![Captura de pantalla 2025-05-15 181912](https://github.com/user-attachments/assets/46c7763c-de89-4c58-8aa2-132bfa6ecdc6)
+
+**Flag: PoKeMoN{Bulbasaur}**
 
 
 
