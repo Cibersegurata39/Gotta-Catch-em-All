@@ -24,6 +24,7 @@ Explicar la realización del siguiente _Capture the flag_ perteneciente a la pla
 - Crear un servidor con *python3*.
 - Descomprimir archivos.
 - Descifrar contraseñas.
+- Buscar archivos por comando.
 - Escalada de privilegios.
 
 ## Herramientas utilizadas
@@ -104,5 +105,23 @@ Esta nueva *flag* está en código hexadecimal (50 6f 4b 65 4d 6f 4e 7b 42 75 6c
 
 **Flag: PoKeMoN{Bulbasaur}**
 
+Listando de manera recursiva se encuentra un nuevo archivo en la dirección './Videos/Gotta/Catch/Them/ALL!' y se comprueba que es un archivo C. Al leer su contenido aparece el usuario y contraseña 'ash : pikapika'.
 
+<code>ls -R</code>
+<code>file Could_this_be_what_Im_looking_forª?.cplusplus</code>
 
+![Captura de pantalla 2025-05-15 182623](https://github.com/user-attachments/assets/7451aac9-2d94-44d1-8e84-b40f609a777f)
+
+Al intentar cambiar de usuario con las credenciales obtenidas, se obtiene acceso a 'ash'. Se comprueba que forma parte del grupo 'sudo' y esto nos permite pivotar hacia *root* también. Ahora se puede acceder a un archivo encontrado previamente en '/home', como es 'roots-pokemon.txt'. En él se encuentra la bandera de *root*.
+
+**Flag: Pikachu!**
+
+![Captura de pantalla 2025-05-15 183352](https://github.com/user-attachments/assets/431f4d7f-b950-4316-a777-e62fe8cdc545)
+
+Para encontrar la última de las *flags*, perteneciente al *pokemon* de tipo fuego, ha sido necesario realizar una búsqueda con <code>find</code>. Basándonos en el nombre del archivo que contenía el *pokemon* de tipo agua, se filtra la búsqueda por archivos que contuvieran 'fire-type' en el nombre. Se obtiene el documento de texto 'fire-type.txt', cuya *flag* está codificada en Base64. Con la ayuda de nuevo de *Cyberchef* se recupera el valor original de la bandera.
+
+<code>find / -type f -name *fire-type* 2>/dev/null</code>
+
+![image](https://github.com/user-attachments/assets/0eeb9ed4-032b-4c91-9c63-401588e8feaf)
+
+**Flag: P0k3m0n{Charmander}**
