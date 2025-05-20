@@ -125,6 +125,6 @@ Para encontrar la última de las *flags*, perteneciente al *pokemon* de tipo fue
 
 <code>find / -type f -name *fire-type* 2>/dev/null</code>
 
-![image](https://github.com/user-attachments/assets/0eeb9ed4-032b-4c91-9c63-401588e8feaf)
+![image](https://github.com/user-attachments/assets/a6b861aa-7997-4e1f-9663-f4c4a66e4aba)
 
 **Flag: P0k3m0n{Charmander}**
